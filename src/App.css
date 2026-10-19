@@ -1,0 +1,28 @@
+/* Application Level Styles */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-page {
+  min-height: calc(100vh - 64px);
+  display: grid;
+  place-items: center;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.welcome-content h1 {
+  color: var(--text-primary);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.welcome-content p {
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+}
