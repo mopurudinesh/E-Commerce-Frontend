@@ -1,5 +1,7 @@
 # E-Commerce authentication frontend
 
+**Developer handover:** start with [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the frontend structure, route and API flows, technologies, security integration, verification status, Windows setup, and guidance for future contributors.
+
 React 19, Vite 8 and React Router frontend for the E-Commerce authentication API. The interface is light mode only. Shopping features are outside this authentication milestone.
 
 ## Local setup (Windows)
