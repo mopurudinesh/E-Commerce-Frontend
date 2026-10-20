@@ -8,6 +8,7 @@ import { PhoneNumberInput } from '../components/PhoneNumberInput';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { AlertBanner } from '../components/AlertBanner';
 import { UserPlus, Mail, ShieldCheck } from 'lucide-react';
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 export const RegisterPage = () => {
   const { register } = useAuth();
@@ -17,7 +18,7 @@ export const RegisterPage = () => {
     firstName: '',
     lastName: '',
     email: '',
-    countryCode: '+91',
+    phoneRegion: 'IN',
     phoneNumber: '',
     password: '',
     confirmPassword: '',
@@ -50,8 +51,8 @@ export const RegisterPage = () => {
 
     if (!formData.phoneNumber.trim()) {
       errors.phoneNumber = 'Phone number is required';
-    } else if (formData.phoneNumber.trim().length < 7) {
-      errors.phoneNumber = 'Phone number must be at least 7 digits';
+    } else if (!isValidPhoneNumber(formData.phoneNumber || '')) {
+      errors.phoneNumber = 'Enter a valid phone number for the selected country.';
     }
 
     if (!formData.password) {
@@ -80,20 +81,11 @@ export const RegisterPage = () => {
 
     setLoading(true);
     try {
-      const fullPhoneNumber = `${formData.countryCode}${formData.phoneNumber.trim()}`;
-      const regionByCallingCode = {
-        '+1': 'US',
-        '+44': 'GB',
-        '+49': 'DE',
-        '+61': 'AU',
-        '+91': 'IN',
-        '+971': 'AE',
-      };
       await register({
         fullName: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        mobileNumber: fullPhoneNumber,
-        phoneRegion: regionByCallingCode[formData.countryCode],
+        mobileNumber: formData.phoneNumber,
+        phoneRegion: formData.phoneRegion,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       });
@@ -177,10 +169,10 @@ export const RegisterPage = () => {
         <PhoneNumberInput
           id="phoneNumber"
           label="Phone Number"
-          countryCode={formData.countryCode}
-          onCountryCodeChange={(code) => setFormData((p) => ({ ...p, countryCode: code }))}
+          country={formData.phoneRegion}
+          onCountryChange={(region) => setFormData((p) => ({ ...p, phoneRegion: region || p.phoneRegion }))}
           value={formData.phoneNumber}
-          onChange={handleChange}
+          onChange={(phoneNumber) => setFormData((p) => ({ ...p, phoneNumber: phoneNumber || '' }))}
           error={validationErrors.phoneNumber}
           required
         />

@@ -12,4 +12,14 @@ const apiClient = axios.create({
   },
 });
 
+let csrfTokenRequest;
+const unsafeMethods = new Set(['post', 'put', 'patch', 'delete']);
+
+apiClient.interceptors.request.use(async (config) => {
+  if (!unsafeMethods.has((config.method || 'get').toLowerCase()) || config.url === '/csrf') return config;
+  csrfTokenRequest ||= apiClient.get('/csrf').then(({ data }) => data.csrfToken).finally(() => { csrfTokenRequest = undefined; });
+  config.headers['X-XSRF-TOKEN'] = await csrfTokenRequest;
+  return config;
+});
+
 export default apiClient;

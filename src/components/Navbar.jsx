@@ -16,15 +16,18 @@ export const Navbar = () => {
     <nav style={styles.nav} aria-label="Main navigation">
       <div style={styles.container}>
         {isAuthenticated ? (
-          <button
-            onClick={handleLogout}
-            style={styles.logoutBtn}
-            title="Sign out of your account"
-            id="btn-logout"
-          >
-            <LogOut size={16} />
-            <span>Sign Out</span>
-          </button>
+          <div style={styles.authLinks}>
+            <Link to="/change-password" style={styles.loginLink}>Change Password</Link>
+            <button
+              onClick={handleLogout}
+              style={styles.logoutBtn}
+              title="Sign out of your account"
+              id="btn-logout"
+            >
+              <LogOut size={16} />
+              <span>Sign Out</span>
+            </button>
+          </div>
         ) : (
           <div style={styles.authLinks}>
             <Link to="/login" style={styles.loginLink} id="nav-link-login">

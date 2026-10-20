@@ -19,7 +19,8 @@ export const LoginPage = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(location.state?.message || '');
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+  const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleChange = (e) => {
@@ -44,6 +45,7 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage('');
     setError('');
 
     if (!validate()) return;
@@ -71,6 +73,11 @@ export const LoginPage = () => {
       subtitle="Sign in to access your account"
       icon={LogIn}
     >
+      <AlertBanner
+        type="success"
+        message={successMessage}
+        onClose={() => setSuccessMessage('')}
+      />
       <AlertBanner
         type="error"
         message={error}

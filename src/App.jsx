@@ -9,6 +9,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { VerifyOtpPage } from './pages/VerifyOtpPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { ChangePasswordPage } from './pages/ChangePasswordPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 function App() {
@@ -26,6 +27,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  <ProtectedRoute>
+                    <ChangePasswordPage />
                   </ProtectedRoute>
                 }
               />

@@ -6,6 +6,8 @@ import { FormInput } from '../components/FormInput';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { AlertBanner } from '../components/AlertBanner';
 import { KeyRound, Mail, ArrowLeft, Send } from 'lucide-react';
+import { isValidPhoneNumber } from 'react-phone-number-input';
+import { PhoneNumberInput } from '../components/PhoneNumberInput';
 
 export const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ export const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [contactMethod, setContactMethod] = useState('email');
+  const [phoneRegion, setPhoneRegion] = useState('IN');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +25,15 @@ export const ForgotPasswordPage = () => {
     setSuccessMsg('');
 
     if (!identifier.trim()) {
-      setError('Enter the email address or international phone number on your account.');
+      setError(contactMethod === 'phone' ? 'Enter your phone number.' : 'Enter your email address.');
+      return;
+    }
+    if (contactMethod === 'phone' && !isValidPhoneNumber(identifier)) {
+      setError('Enter a valid phone number for the selected country.');
+      return;
+    }
+    if (contactMethod === 'email' && !/^\S+@\S+\.\S+$/.test(identifier.trim())) {
+      setError('Enter a valid email address.');
       return;
     }
 
@@ -49,17 +61,31 @@ export const ForgotPasswordPage = () => {
       <AlertBanner type="success" message={successMsg} onClose={() => setSuccessMsg('')} />
 
       <form onSubmit={handleSubmit} noValidate>
-        <FormInput
+        <label htmlFor="contactMethod" style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Recovery method</label>
+        <select id="contactMethod" value={contactMethod} onChange={(event) => { setContactMethod(event.target.value); setIdentifier(''); setError(''); }} style={{ width: '100%', height: 44, marginBottom: 18, borderRadius: 8, padding: '0 12px' }}>
+          <option value="email">Email address</option>
+          <option value="phone">Phone number</option>
+        </select>
+        {contactMethod === 'phone' ? <PhoneNumberInput
           id="identifier"
-          type="text"
-          label="Email or Phone Number"
-          placeholder="name@example.com or +14155552671"
+          label="Phone Number"
+          country={phoneRegion}
+          onCountryChange={(region) => setPhoneRegion(region || phoneRegion)}
+          value={identifier}
+          onChange={(phone) => setIdentifier(phone || '')}
+          error={error}
+          required
+        /> : <FormInput
+          id="identifier"
+          type="email"
+          label="Email Address"
+          placeholder="name@example.com"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           icon={Mail}
           required
           autoComplete="email"
-        />
+        />}
 
         <PrimaryButton
           id="btn-forgot-submit"
